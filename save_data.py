@@ -1,0 +1,1 @@
+import dagster_pipeline.assets.modeling as model

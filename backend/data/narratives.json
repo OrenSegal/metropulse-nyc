@@ -1,0 +1,335 @@
+{
+  "Greenpoint Av": {
+    "persona": "Major Transit Anchor",
+    "description": "A key Brooklyn transit point serving the surrounding community. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 92.12121212121212,
+    "is_ai_generated": false
+  },
+  "Marcy Av": {
+    "persona": "Dynamic Brooklyn Hub",
+    "description": "A balanced 'Live-Work-Play' neighborhood combining commercial density with social amenities. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 55.757575757575765,
+    "is_ai_generated": false
+  },
+  "High St": {
+    "persona": "Dynamic Brooklyn Hub",
+    "description": "A balanced 'Live-Work-Play' neighborhood combining commercial density with social amenities. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 61.66666666666667,
+    "is_ai_generated": false
+  },
+  "Clark St": {
+    "persona": "Dynamic Brooklyn Hub",
+    "description": "A balanced 'Live-Work-Play' neighborhood combining commercial density with social amenities. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 55.757575757575765,
+    "is_ai_generated": false
+  },
+  "Court St": {
+    "persona": "Brooklyn Student Hub",
+    "description": "Defined by student foot traffic and nearby educational institutions. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 55.757575757575765,
+    "is_ai_generated": false
+  },
+  "Bergen St": {
+    "persona": "Brooklyn Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 86.36363636363636,
+    "is_ai_generated": false
+  },
+  "Canal St": {
+    "persona": "Manhattan Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 83.78787878787878,
+    "is_ai_generated": false
+  },
+  "Carroll St": {
+    "persona": "Brooklyn Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume peaks in the Morning (6-10am), indicating a heavy outbound commuter flow.",
+    "vitality_score": 83.78787878787878,
+    "is_ai_generated": false
+  },
+  "Smith-9 Sts": {
+    "persona": "Brooklyn Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 66.96969696969697,
+    "is_ai_generated": false
+  },
+  "Prince St": {
+    "persona": "Manhattan Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 86.36363636363636,
+    "is_ai_generated": false
+  },
+  "W 4 St-Wash Sq": {
+    "persona": "Manhattan Student Hub",
+    "description": "Defined by student foot traffic and nearby educational institutions. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 99.54545454545455,
+    "is_ai_generated": false
+  },
+  "28 St": {
+    "persona": "Manhattan Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 95.45454545454545,
+    "is_ai_generated": false
+  },
+  "34 St-Herald Sq": {
+    "persona": "Manhattan Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 96.81818181818181,
+    "is_ai_generated": false
+  },
+  "68 St-Hunter College": {
+    "persona": "Manhattan Student Hub",
+    "description": "Defined by student foot traffic and nearby educational institutions. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 0.0,
+    "is_ai_generated": false
+  },
+  "Grand Central-42 St": {
+    "persona": "Manhattan Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 89.54545454545455,
+    "is_ai_generated": false
+  },
+  "33 St": {
+    "persona": "Manhattan Student Hub",
+    "description": "Defined by student foot traffic and nearby educational institutions. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 86.36363636363636,
+    "is_ai_generated": false
+  },
+  "City Hall": {
+    "persona": "Manhattan Student Hub",
+    "description": "Defined by student foot traffic and nearby educational institutions. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 81.51515151515152,
+    "is_ai_generated": false
+  },
+  "Hewes St": {
+    "persona": "Brooklyn Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume peaks in the Morning (6-10am), indicating a heavy outbound commuter flow.",
+    "vitality_score": 0.0,
+    "office_score": 73.33333333333333,
+    "is_ai_generated": false
+  },
+  "Broadway": {
+    "persona": "Major Transit Anchor",
+    "description": "A key Brooklyn transit point serving the surrounding community. Passenger volume peaks in the Morning (6-10am), indicating a heavy outbound commuter flow.",
+    "vitality_score": 78.93939393939394,
+    "office_score": 43.333333333333336,
+    "is_ai_generated": false
+  },
+  "Grand St": {
+    "persona": "Dynamic Brooklyn Hub",
+    "description": "A balanced 'Live-Work-Play' neighborhood combining commercial density with social amenities. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 61.66666666666667,
+    "office_score": 55.3030303030303,
+    "is_ai_generated": false
+  },
+  "55 St": {
+    "persona": "Brooklyn Local Stop",
+    "description": "A key Brooklyn transit point serving the surrounding community. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 0.0,
+    "office_score": 61.81818181818181,
+    "is_ai_generated": false
+  },
+  "Hunters Point Av": {
+    "persona": "Queens Local Stop",
+    "description": "A key Queens transit point serving the surrounding community. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 0.0,
+    "office_score": 68.18181818181817,
+    "is_ai_generated": false
+  },
+  "3 Av": {
+    "persona": "Manhattan Student Hub",
+    "description": "Defined by student foot traffic and nearby educational institutions. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 97.42424242424242,
+    "office_score": 43.333333333333336,
+    "is_ai_generated": false
+  },
+  "Middle Village-Metropolitan Av": {
+    "persona": "Major Transit Anchor",
+    "description": "A key Queens transit point serving the surrounding community. Passenger volume peaks in the Morning (6-10am), indicating a heavy outbound commuter flow.",
+    "vitality_score": 0.0,
+    "office_score": 0.0,
+    "is_ai_generated": false
+  },
+  "Fresh Pond Rd": {
+    "persona": "Major Transit Anchor",
+    "description": "A key Queens transit point serving the surrounding community. Passenger volume peaks in the Morning (6-10am), indicating a heavy outbound commuter flow.",
+    "vitality_score": 42.12121212121212,
+    "office_score": 61.81818181818181,
+    "is_ai_generated": false
+  },
+  "Forest Av": {
+    "persona": "Major Transit Anchor",
+    "description": "A key Queens transit point serving the surrounding community. Passenger volume peaks in the Morning (6-10am), indicating a heavy outbound commuter flow.",
+    "vitality_score": 66.96969696969697,
+    "office_score": 43.333333333333336,
+    "is_ai_generated": false
+  },
+  "Forest Hills-71 Av": {
+    "persona": "Queens Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume peaks in the Morning (6-10am), indicating a heavy outbound commuter flow.",
+    "vitality_score": 61.66666666666667,
+    "office_score": 90.30303030303031,
+    "is_ai_generated": false
+  },
+  "36 St": {
+    "persona": "Brooklyn Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 78.93939393939394,
+    "office_score": 90.30303030303031,
+    "is_ai_generated": false
+  },
+  "Wall St": {
+    "persona": "Manhattan Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 92.12121212121212,
+    "office_score": 97.87878787878788,
+    "is_ai_generated": false
+  },
+  "Whitehall St-South Ferry": {
+    "persona": "Manhattan Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 75.15151515151514,
+    "office_score": 91.81818181818183,
+    "is_ai_generated": false
+  },
+  "Flushing Av": {
+    "persona": "Brooklyn Local Stop",
+    "description": "A key Brooklyn transit point serving the surrounding community. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 0.0,
+    "office_score": 24.545454545454547,
+    "is_ai_generated": false
+  },
+  "Delancey St-Essex St": {
+    "persona": "Manhattan Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 99.69696969696969,
+    "office_score": 85.0,
+    "is_ai_generated": false
+  },
+  "39 Av-Dutch Kills": {
+    "persona": "Major Transit Anchor",
+    "description": "A key Queens transit point serving the surrounding community. Passenger volume peaks in the Morning (6-10am), indicating a heavy outbound commuter flow.",
+    "vitality_score": 42.12121212121212,
+    "office_score": 68.18181818181817,
+    "is_ai_generated": false
+  },
+  "Fort Hamilton Pkwy": {
+    "persona": "Major Transit Anchor",
+    "description": "A key Brooklyn transit point serving the surrounding community. Passenger volume peaks in the Morning (6-10am), indicating a heavy outbound commuter flow.",
+    "vitality_score": 0.0,
+    "office_score": 24.545454545454547,
+    "is_ai_generated": false
+  },
+  "Union St": {
+    "persona": "Brooklyn Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 93.93939393939394,
+    "office_score": 94.54545454545455,
+    "is_ai_generated": false
+  },
+  "Nassau Av": {
+    "persona": "Brooklyn Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 90.45454545454545,
+    "office_score": 83.18181818181817,
+    "is_ai_generated": false
+  },
+  "Bedford Av": {
+    "persona": "Dynamic Brooklyn Hub",
+    "description": "A balanced 'Live-Work-Play' neighborhood combining commercial density with social amenities. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 87.72727272727273,
+    "office_score": 61.81818181818181,
+    "is_ai_generated": false
+  },
+  "Vernon Blvd-Jackson Av": {
+    "persona": "Queens Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume peaks in the Morning (6-10am), indicating a heavy outbound commuter flow.",
+    "vitality_score": 71.51515151515152,
+    "office_score": 81.66666666666667,
+    "is_ai_generated": false
+  },
+  "Court Sq-23 St": {
+    "persona": "Queens Local Stop",
+    "description": "A key Queens transit point serving the surrounding community. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 42.12121212121212,
+    "office_score": 55.3030303030303,
+    "is_ai_generated": false
+  },
+  "Queensboro Plaza": {
+    "persona": "Queens Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 66.96969696969697,
+    "office_score": 81.66666666666667,
+    "is_ai_generated": false
+  },
+  "40 St-Lowery St": {
+    "persona": "Major Transit Anchor",
+    "description": "A key Queens transit point serving the surrounding community. Passenger volume peaks in the Morning (6-10am), indicating a heavy outbound commuter flow.",
+    "vitality_score": 75.15151515151514,
+    "office_score": 24.545454545454547,
+    "is_ai_generated": false
+  },
+  "52 St": {
+    "persona": "Major Transit Anchor",
+    "description": "A key Queens transit point serving the surrounding community. Passenger volume peaks in the Morning (6-10am), indicating a heavy outbound commuter flow.",
+    "vitality_score": 75.15151515151514,
+    "office_score": 24.545454545454547,
+    "is_ai_generated": false
+  },
+  "65 St": {
+    "persona": "Major Transit Anchor",
+    "description": "A key Queens transit point serving the surrounding community. Passenger volume peaks in the Morning (6-10am), indicating a heavy outbound commuter flow.",
+    "vitality_score": 61.66666666666667,
+    "office_score": 43.333333333333336,
+    "is_ai_generated": false
+  },
+  "82 St-Jackson Hts": {
+    "persona": "Queens Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume peaks in the Morning (6-10am), indicating a heavy outbound commuter flow.",
+    "vitality_score": 55.757575757575765,
+    "office_score": 73.33333333333333,
+    "is_ai_generated": false
+  },
+  "Jay St-MetroTech": {
+    "persona": "Brooklyn Student Hub",
+    "description": "Defined by student foot traffic and nearby educational institutions. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 71.51515151515152,
+    "office_score": 88.63636363636364,
+    "is_ai_generated": false
+  },
+  "Broadway-Lafayette St": {
+    "persona": "Manhattan Business Center",
+    "description": "A dense commercial district dominated by office buildings and professional services. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 89.39393939393939,
+    "office_score": 76.06060606060606,
+    "is_ai_generated": false
+  },
+  "Sterling St": {
+    "persona": "Major Transit Anchor",
+    "description": "A key Brooklyn transit point serving the surrounding community. Passenger volume peaks in the Morning (6-10am), indicating a heavy outbound commuter flow.",
+    "vitality_score": 0.0,
+    "office_score": 61.81818181818181,
+    "is_ai_generated": false
+  },
+  "Graham Av": {
+    "persona": "Dynamic Brooklyn Hub",
+    "description": "A balanced 'Live-Work-Play' neighborhood combining commercial density with social amenities. Passenger volume peaks in the Morning (6-10am), indicating a heavy outbound commuter flow.",
+    "vitality_score": 81.51515151515152,
+    "office_score": 61.81818181818181,
+    "is_ai_generated": false
+  },
+  "Lorimer St": {
+    "persona": "Brooklyn Local Stop",
+    "description": "A key Brooklyn transit point serving the surrounding community. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 90.45454545454545,
+    "office_score": 43.333333333333336,
+    "is_ai_generated": false
+  },
+  "8 St-NYU": {
+    "persona": "Manhattan Student Hub",
+    "description": "Defined by student foot traffic and nearby educational institutions. Passenger volume swells in the Evening (4-8pm) as the workday ends and retail activity picks up.",
+    "vitality_score": 81.51515151515152,
+    "office_score": 79.0909090909091,
+    "is_ai_generated": false
+  }
+}

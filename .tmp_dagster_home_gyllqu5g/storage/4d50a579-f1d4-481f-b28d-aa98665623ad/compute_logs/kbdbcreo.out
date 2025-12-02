@@ -1,0 +1,9 @@
+--- FETCHING STATION LOCATIONS ---
+Loaded 445 stations.
+--- DETECTING LATEST DATA AVAILABILITY ---
+Latest Data Available: 2025-11-20T23:00:00.000
+Fetching Range: 2025-10-21T00:00:00 to 2025-11-20T23:00:00.000
+--- FETCHING RIDERSHIP ---
+Downloaded 600000 hourly records.
+--- PROCESSING DATA ---
+--- SAVING TO /Users/orensegal/Documents/GitHub/metropulse-nyc/dagster_pipeline/data/processed/traffic_clean.parquet ---

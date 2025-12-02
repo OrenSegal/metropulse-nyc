@@ -1,0 +1,37 @@
+{
+  "0": {
+    "name": "The Night Owls",
+    "description": "Late night activity.",
+    "tags": [
+      "Nightlife"
+    ]
+  },
+  "1": {
+    "name": "The Commuters",
+    "description": "9-5 Warriors.",
+    "tags": [
+      "Corporate"
+    ]
+  },
+  "2": {
+    "name": "The Students",
+    "description": "Near universities.",
+    "tags": [
+      "Academic"
+    ]
+  },
+  "3": {
+    "name": "The Tourists",
+    "description": "Midtown hubs.",
+    "tags": [
+      "Tourism"
+    ]
+  },
+  "4": {
+    "name": "The Locals",
+    "description": "Residential areas.",
+    "tags": [
+      "Home"
+    ]
+  }
+}
