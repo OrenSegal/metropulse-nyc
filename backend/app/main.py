@@ -25,7 +25,7 @@ try:
 except ImportError:
     HAS_GENAI = False
 
-app = FastAPI(title="MetroPulse NYC")
+app = FastAPI(title="Metropulse NYC")
 
 app.add_middleware(
     CORSMiddleware,

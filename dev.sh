@@ -8,14 +8,14 @@ lsof -ti:5173 | xargs kill -9 2>/dev/null
 # Function to kill processes on exit
 cleanup() {
     echo ""
-    echo "🛑 Shutting down MetroPulse..."
+    echo "🛑 Shutting down Metropulse..."
     kill $(jobs -p) 2>/dev/null
     exit
 }
 
 trap cleanup SIGINT
 
-echo "🚀 Starting MetroPulse NYC..."
+echo "🚀 Starting Metropulse NYC..."
 
 # 2. Check for Data
 if [ ! -f "backend/data/clusters.parquet" ]; then

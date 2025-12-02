@@ -1,8 +1,8 @@
-# MetroPulse NYC: Urban Mobility Intelligence Platform
+# Metropulse NYC: Urban Mobility Intelligence Platform
 
 ## System Overview
 
-MetroPulse is a high-performance **Lakehouse-Lite** architecture designed to segment NYC subway stations into behavioral archetypes. By synthesizing temporal ridership signals (MTA) with geospatial amenity vectors (OpenStreetMap), the system constructs a "Station DNA" used to drive unsupervised learning models and hybrid narrative generation.
+Metropulse is a high-performance **Lakehouse-Lite** architecture designed to segment NYC subway stations into behavioral archetypes. By synthesizing temporal ridership signals (MTA) with geospatial amenity vectors (OpenStreetMap), the system constructs a "Station DNA" used to drive unsupervised learning models and hybrid narrative generation.
 
 The platform decouples compute (Dagster/Polars) from serving (FastAPI/DuckDB), allowing for high-throughput analytics on static file artifacts without persistent database overhead.
 
