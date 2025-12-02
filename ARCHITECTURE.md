@@ -35,7 +35,7 @@ This document outlines the architectural reasoning behind the Metropulse pipelin
 
 ## 5. Serving Layer: The "Lakehouse-Lite"
 
-**Problem:** Traditional Data Warehouses incur high fixed costs and latency for read-heavy, write-once workloads.
+- **Problem:** Traditional Data Warehouses incur high fixed costs and latency for read-heavy, write-once workloads.
 - **Decision:** Decoupled Compute and Storage.
   - _Storage:_ Processed artifacts are materialized as **Parquet** files.
   - _Compute:_ The API utilizes **DuckDB** in-process to execute SQL directly over Parquet.
