@@ -1,7 +1,0 @@
-[32m2025-11-30 22:54:20 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 4d50a579-f1d4-481f-b28d-aa98665623ad - 13931 - LOGS_CAPTURED - Started capturing logs in process (pid: 13931).
-[32m2025-11-30 22:54:20 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 4d50a579-f1d4-481f-b28d-aa98665623ad - 13931 - fetch_mta_data - STEP_START - Started execution of step "fetch_mta_data".
-[32m2025-11-30 22:54:54 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 4d50a579-f1d4-481f-b28d-aa98665623ad - 13931 - fetch_mta_data - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
-[32m2025-11-30 22:54:54 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 4d50a579-f1d4-481f-b28d-aa98665623ad - fetch_mta_data - Writing file at: /Users/orensegal/Documents/GitHub/metropulse-nyc/.tmp_dagster_home_gyllqu5g/storage/fetch_mta_data using PickledObjectFilesystemIOManager...
-[32m2025-11-30 22:54:54 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 4d50a579-f1d4-481f-b28d-aa98665623ad - 13931 - fetch_mta_data - ASSET_MATERIALIZATION - Materialized value fetch_mta_data.
-[32m2025-11-30 22:54:54 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 4d50a579-f1d4-481f-b28d-aa98665623ad - 13931 - fetch_mta_data - HANDLED_OUTPUT - Handled output "result" using IO manager "io_manager"
-[32m2025-11-30 22:54:54 -0500[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 4d50a579-f1d4-481f-b28d-aa98665623ad - 13931 - fetch_mta_data - STEP_SUCCESS - Finished execution of step "fetch_mta_data" in 34.11s.
