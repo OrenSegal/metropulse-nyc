@@ -8,3 +8,8 @@ fsspec
 osmnx
 scikit-learn
 tslearn
+fastapi
+uvicorn
+duckdb
+pydantic
+google-genai

@@ -1,0 +1,11 @@
+# Test-only deps for backend/tests/. Deliberately narrower than the root
+# requirements.txt: the unit tests exercise app/main.py's import chain
+# (fastapi, pydantic, db.py) and don't need the pipeline's geospatial/ML
+# stack (osmnx, scikit-learn, tslearn, dagster).
+fastapi
+pydantic
+duckdb
+pandas
+numpy
+python-dotenv
+pytest

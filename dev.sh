@@ -30,7 +30,7 @@ source venv/bin/activate
 
 # FIX: Ensure dependencies are installed ---
 echo "📦 Checking dependencies..."
-pip install -r backend/requirements.txt > /dev/null 2>&1
+pip install -r requirements.txt > /dev/null 2>&1
 # -------------------------------------------
 
 cd backend
