@@ -338,3 +338,6 @@ cache/
 # Dagster pipeline outputs, and the copy dev.sh stages into backend/ to serve
 dagster_pipeline/data/processed/
 backend/data/
+
+# Dagster local runtime
+.tmp_dagster_home_*/
