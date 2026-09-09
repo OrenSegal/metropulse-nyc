@@ -17,6 +17,7 @@ export interface Metrics {
   residential_type: string;
   retail_gap: number;
   borough: string;
+  office_density?: number;
 }
 
 export interface IntelligentStation {

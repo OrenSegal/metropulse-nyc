@@ -23,6 +23,35 @@ python -m pytest tests/ -v
 
 This is exactly what CI runs on every push (`.github/workflows/ci.yml`).
 
+## Running backend lint
+
+```bash
+pip install ruff
+ruff check backend/
+```
+
+## Running the frontend test suite
+
+```bash
+cd frontend
+npm run test    # vitest, jsdom
+npm run lint    # eslint
+npm run build   # tsc -b && vite build
+```
+
+`src/api.test.ts` covers the three API calls in `src/api.ts` (station list,
+cluster info, station narrative), and `src/App.test.tsx` covers the
+loading/loaded states and the search-filter logic in `App.tsx`, with
+`Map.tsx` mocked out (it renders live MapLibre/WebGL and isn't
+unit-testable in jsdom).
+
+**Known gap:** `Map.tsx`, `Sidebar.tsx`, `StationDrawer.tsx`, and `Legend.tsx`
+have no component tests of their own yet — only their effect on `App.tsx`'s
+render output is covered indirectly. Next step: add
+`@testing-library/react` render tests for `Sidebar`'s mode switcher and
+`StationDrawer`'s mode-specific content (retail/lifestyle/general), since
+those are the components with the most conditional rendering logic.
+
 ## Running the benchmark against real data
 
 `scripts/benchmark.py` measures the same query against a real, hydrated

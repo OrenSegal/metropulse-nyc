@@ -1,4 +1,5 @@
 import { Search, Map, ShoppingBag, Moon } from 'lucide-react';
+import type { ReactNode } from 'react';
 import Legend from './Legend';
 
 interface Props {
@@ -65,7 +66,15 @@ export default function Sidebar({ mode, setMode, searchQuery, setSearchQuery }: 
   );
 }
 
-function ModeBtn({ active, onClick, icon, label, desc }: any) {
+interface ModeBtnProps {
+  active: boolean;
+  onClick: () => void;
+  icon: ReactNode;
+  label: string;
+  desc: string;
+}
+
+function ModeBtn({ active, onClick, icon, label, desc }: ModeBtnProps) {
   return (
     <button
       onClick={onClick}

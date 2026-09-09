@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { X, Clock, Building, Coffee, Sparkles, MapPin, Info, ShoppingBag, HeartPulse } from 'lucide-react';
 import { type IntelligentStation, fetchStationAnalysis } from '../api';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 
 interface AnalysisData {
   persona: string;
@@ -14,13 +14,11 @@ interface AnalysisData {
 export default function StationDrawer({ station, onClose, mode }: { station: IntelligentStation, onClose: () => void, mode: string }) {
   const { time_dna, metrics } = station;
   const [analysis, setAnalysis] = useState<AnalysisData | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showExplainer, setShowExplainer] = useState(false);
 
   useEffect(() => {
     let active = true;
-    setLoading(true);
-    setAnalysis(null);
 
     fetchStationAnalysis(station.STATION)
       .then(data => {
@@ -57,9 +55,9 @@ export default function StationDrawer({ station, onClose, mode }: { station: Int
   // --- Dynamic Content based on Mode ---
   const renderModeSpecificContent = () => {
     if (mode === 'retail') {
-      const gap = (metrics as any).retail_gap || 0;
+      const gap = metrics.retail_gap || 0;
       const isOpportunity = gap > 0.6;
-      
+
       return (
         <div className={`p-5 rounded-xl border ${isOpportunity ? 'bg-emerald-900/20 border-emerald-800/50' : 'bg-gray-800/40 border-gray-700/50'} mb-6`}>
           <div className="flex items-center gap-2 mb-3">
@@ -70,8 +68,8 @@ export default function StationDrawer({ station, onClose, mode }: { station: Int
             {isOpportunity ? "High Market Opportunity" : "Saturated Market"}
           </div>
           <p className="text-sm text-gray-400 leading-relaxed">
-            {isOpportunity 
-              ? `High office traffic (${Math.round((metrics as any).office_density || 0)}%) with low social amenities creates a gap for lunch/coffee spots.`
+            {isOpportunity
+              ? `High office traffic (${Math.round(metrics.office_density || 0)}%) with low social amenities creates a gap for lunch/coffee spots.`
               : "Balanced supply and demand. Amenities match the current foot traffic levels."
             }
           </p>
@@ -207,7 +205,7 @@ export default function StationDrawer({ station, onClose, mode }: { station: Int
         {/* Stats Grid */}
         <div className="grid grid-cols-3 gap-3">
           <StatCard icon={<HeartPulse size={14} />} label="Pulse" value={displayVitality} sub="%" color="text-emerald-400" />
-          <StatCard icon={<Building size={14} />} label="Offices" value={Math.round((metrics as any).office_density || 0)} sub="%" color="text-blue-400" />
+          <StatCard icon={<Building size={14} />} label="Offices" value={Math.round(metrics.office_density || 0)} sub="%" color="text-blue-400" />
           <StatCard icon={<Coffee size={14} />} label="Amenities" value={station.n_bars} sub="Spots" color="text-amber-400" />
         </div>
 
@@ -236,7 +234,15 @@ export default function StationDrawer({ station, onClose, mode }: { station: Int
   );
 }
 
-function StatCard({ icon, label, value, sub, color }: any) {
+interface StatCardProps {
+  icon: ReactNode;
+  label: string;
+  value: number;
+  sub: string;
+  color?: string;
+}
+
+function StatCard({ icon, label, value, sub, color }: StatCardProps) {
   return (
     <div className="bg-[#151517] p-3 rounded-xl border border-gray-800 hover:border-gray-700 transition-all hover:bg-[#1a1a1d] group text-center">
       <div className="flex items-center justify-center gap-2 text-gray-500 group-hover:text-gray-400 mb-2 transition-colors">
@@ -249,7 +255,14 @@ function StatCard({ icon, label, value, sub, color }: any) {
   );
 }
 
-function TimeRow({ label, time, value, color }: any) {
+interface TimeRowProps {
+  label: string;
+  time: string;
+  value: number;
+  color: string;
+}
+
+function TimeRow({ label, time, value, color }: TimeRowProps) {
   const width = Math.max(value, 4); // Min width for visibility
   return (
     <div className="flex items-center gap-3 group">

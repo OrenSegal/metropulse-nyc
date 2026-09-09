@@ -45,9 +45,10 @@ export default function App() {
 
       <AnimatePresence>
         {selectedStation && (
-          <StationDrawer 
-            station={selectedStation} 
-            onClose={() => setSelectedStation(null)} 
+          <StationDrawer
+            key={selectedStation.STATION}
+            station={selectedStation}
+            onClose={() => setSelectedStation(null)}
             mode={mode}
           />
         )}

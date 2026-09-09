@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import Map, { Source, Layer } from 'react-map-gl/maplibre';
 import type { MapLayerMouseEvent } from 'react-map-gl/maplibre';
+import type { FeatureCollection } from 'geojson';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import type { IntelligentStation } from '../api';
 
@@ -15,12 +16,12 @@ interface Props {
 
 export default function StationMap({ stations, mode, onSelect, selectedName }: Props) {
 
-  const geoJson = useMemo(() => ({
+  const geoJson = useMemo<FeatureCollection>(() => ({
     type: 'FeatureCollection',
     features: stations.map(s => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [s.lon, s.lat] },
-      properties: { ...s, ...s.metrics } 
+      properties: { ...s, ...s.metrics }
     }))
   }), [stations]);
 
@@ -77,12 +78,15 @@ export default function StationMap({ stations, mode, onSelect, selectedName }: P
         }
       }}
     >
-      <Source type="geojson" data={geoJson as any}>
+      <Source type="geojson" data={geoJson}>
         <Layer
           id="stations"
           type="circle"
           paint={{
             'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 3, 15, 8],
+            // maplibre style expressions are highly polymorphic per layer/mode;
+            // react-map-gl's paint typing can't express getCircleColor()'s union return.
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             'circle-color': getCircleColor() as any,
             'circle-stroke-width': 1,
             'circle-stroke-color': '#000',
