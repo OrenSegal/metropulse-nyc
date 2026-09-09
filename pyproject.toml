@@ -5,3 +5,6 @@ extend-exclude = ["venv", ".tmp_dagster_home_*"]
 
 [tool.ruff.lint]
 select = ["E", "F"]
+
+[tool.vercel]
+entrypoint = "backend.app.main:app"
