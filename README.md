@@ -14,11 +14,23 @@ query-time): the pipeline writes Parquet once, the API reads it directly
 with zero-copy DuckDB scans — no persistent database process, no ETL into a
 serving store.
 
-On the current dataset: 660 stations, 5 behavioral clusters, 73,545
-ridership rows. A `GROUP BY station` aggregation over the full ridership
-table (the query the pulse endpoint runs on every cold start) executes in
-~6ms — DuckDB-over-Parquet stays interactive at this scale without an index
-or a warm cache.
+On a fresh 30-day pull from the MTA API (2026-09-09): 344 stations, 5
+behavioral clusters, 106,810 ridership rows — dataset size varies with the
+rolling ingestion window, so treat these as representative, not fixed.
+The `GROUP BY station` aggregation over the full ridership table (the query
+the pulse endpoint runs on every cold start, `backend/app/main.py`'s
+`preload_data()`) was benchmarked over 100 iterations after a warmup:
+DuckDB execution alone measured **p50 5.82ms / p95 6.83ms** — in line with
+the query engine's ~6ms reputation at this scale. The full request path
+(`db.query()`: fresh in-memory connection, pandas NaN/inf cleanup,
+dict conversion) measured **p50 21.96ms / p95 24.44ms**, which is the
+number that actually bounds client-perceived latency.
+
+Reproduce with `python scripts/benchmark.py` (see the script's docstring
+for how to hydrate `backend/data/traffic_clean.parquet` first — it's a
+pipeline output, not checked into git). A synthetic-data regression guard
+that doesn't require hydrated data lives in
+`backend/tests/test_performance.py` and runs in CI.
 
 ## Architecture
 
@@ -164,7 +176,10 @@ pip install -r requirements-dev.txt
 python -m pytest tests/ -v
 ```
 
-19 unit tests against the real `GeoEngine` and `RuleBasedNarrative` classes
+21 tests: 19 against the real `GeoEngine` and `RuleBasedNarrative` classes
 in `app/main.py` — no mocking, and no data files required (both classes are
-pure functions over their arguments). CI runs this suite on every push (see
-the badge above).
+pure functions over their arguments) — plus 2 performance regression tests
+in `test_performance.py` that build their own synthetic Parquet fixture and
+assert the `GROUP BY station` query stays under a generous latency ceiling.
+CI runs this suite on every push (see the badge above). See
+[CONTRIBUTING.md](CONTRIBUTING.md) for setup details.
