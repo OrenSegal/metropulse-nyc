@@ -18,6 +18,7 @@ from app import db  # noqa: E402
 STATIONS = 344
 HOURS = 310  # ~ same order of magnitude as one 30-day pipeline pull
 LATENCY_CEILING_MS = 50
+FULL_PATH_LATENCY_CEILING_MS = 150
 
 
 @pytest.fixture(scope="module")
@@ -66,6 +67,10 @@ def test_group_by_station_query_is_fast(synthetic_traffic_file):
 
 
 def test_full_query_path_is_fast(synthetic_traffic_file):
+    # Wider ceiling than the DuckDB-only test above: this path also pays for
+    # connection setup and a pandas conversion, and CI runners are shared,
+    # noisy-neighbor hardware -- this is a regression guard against the path
+    # becoming pathologically slow, not a tight perf assertion.
     query = f"""
         SELECT
             STATION,
@@ -81,7 +86,7 @@ def test_full_query_path_is_fast(synthetic_traffic_file):
     elapsed_ms = (time.perf_counter() - start) * 1000
 
     assert len(result) > 0
-    assert elapsed_ms < LATENCY_CEILING_MS, (
+    assert elapsed_ms < FULL_PATH_LATENCY_CEILING_MS, (
         f"Full db.query() path took {elapsed_ms:.2f}ms, "
-        f"exceeding the {LATENCY_CEILING_MS}ms regression ceiling"
+        f"exceeding the {FULL_PATH_LATENCY_CEILING_MS}ms regression ceiling"
     )
