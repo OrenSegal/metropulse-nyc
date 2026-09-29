@@ -25,7 +25,7 @@ _`scripts/render_asset_graph.py` regenerates this image from the `@asset` signat
 What each stage does:
 
 - **Ingestion.** Pulls ridership from NY Open Data (Socrata API). It first looks up the latest `transit_timestamp` and fetches the 30 days before it, so a lag in upstream reporting doesn't produce an empty window.
-- **Enrichment.** Uses OSMnx (Overpass API) to count points of interest within 300m of each station: nightlife (`amenity` = bar, pub, nightclub), offices (any `office=*` tag) and academic (`amenity` = university, college).
+- **Enrichment.** Uses OSMnx (Overpass API) to count points of interest within 300m of each station: nightlife (`amenity` = bar, pub), offices (any `office=*` tag) and academic (`amenity` = university, college).
 - **Transformation.** Pivots each station's ridership into a 168-value vector, one per hour of the week. `TimeSeriesScalerMeanVariance` (z-score) then normalizes each vector, so stations cluster by the shape of their week (for example, a commuter pattern) rather than by total volume.
 
 Outputs land in `dagster_pipeline/data/processed/`. The backend reads from `backend/data/`, so they have to be copied there (see Setup).
