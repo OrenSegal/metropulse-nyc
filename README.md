@@ -1,136 +1,107 @@
-# Metropulse NYC: Urban Mobility Intelligence Platform
+# Metropulse NYC
+
+Groups New York City subway stations by how riders use them.
 
 [![CI](https://github.com/OrenSegal/metropulse-nyc/actions/workflows/ci.yml/badge.svg)](https://github.com/OrenSegal/metropulse-nyc/actions/workflows/ci.yml)
 
-## System Overview
+Metropulse combines hourly MTA ridership with counts of nearby bars, offices and universities from OpenStreetMap, then clusters stations with similar weekly ridership patterns. A FastAPI backend serves the clusters, per-station metrics and short text descriptions, and a React frontend shows them on a map.
 
-Metropulse segments NYC subway stations into behavioral archetypes by
-synthesizing temporal ridership signals (MTA) with geospatial amenity
-vectors (OpenStreetMap) into a "Station DNA" used to drive unsupervised
-clustering and hybrid narrative generation.
+## How it works
 
-Compute (Dagster/Polars, batch) is decoupled from serving (FastAPI/DuckDB,
-query-time): the pipeline writes Parquet once, the API reads it directly
-with zero-copy DuckDB scans — no persistent database process, no ETL into a
-serving store.
+A Dagster pipeline (Polars, batch) writes Parquet files. The API reads those files directly with DuckDB at query time, so there is no database server to run and no step that loads data into a separate serving store.
 
-On a fresh 30-day pull from the MTA API (2026-09-09): 344 stations, 5
-behavioral clusters, 106,810 ridership rows — dataset size varies with the
-rolling ingestion window, so treat these as representative, not fixed.
-The `GROUP BY station` aggregation over the full ridership table (the query
-the pulse endpoint runs on every cold start, `backend/app/main.py`'s
-`preload_data()`) was benchmarked over 100 iterations after a warmup:
-DuckDB execution alone measured **p50 5.82ms / p95 6.83ms** — in line with
-the query engine's ~6ms reputation at this scale. The full request path
-(`db.query()`: fresh in-memory connection, pandas NaN/inf cleanup,
-dict conversion) measured **p50 21.96ms / p95 24.44ms**, which is the
-number that actually bounds client-perceived latency.
+### Pipeline
 
-Reproduce with `python scripts/benchmark.py` (see the script's docstring
-for how to hydrate `backend/data/traffic_clean.parquet` first — it's a
-pipeline output, not checked into git). A synthetic-data regression guard
-that doesn't require hydrated data lives in
-`backend/tests/test_performance.py` and runs in CI.
-
-## Architecture
-
-### 1. Data Engineering Pipeline (ELT)
-
-The pipeline is orchestrated via **Dagster** (`dagster_pipeline/`) as four
-software-defined assets, each declaring its inputs as function parameters —
-Dagster resolves the dependency graph from that, not from a separate config:
+The pipeline in `dagster_pipeline/` has four Dagster assets. Each one declares its inputs as function parameters, and Dagster builds the dependency graph from those signatures:
 
 ![Asset lineage graph](docs/asset_graph.png)
 
-_(`scripts/render_asset_graph.py` regenerates this from the actual
-`@asset` signatures in `dagster_pipeline/assets/*.py` — it's a transcription
-of the real dependency graph, not a mockup.)_
+_`scripts/render_asset_graph.py` regenerates this image from the `@asset` signatures in `dagster_pipeline/assets/*.py`, so it reflects the real graph._
 
 - `fetch_mta_data` (ingestion) → `fetch_poi_features` (enrichment)
 - both feed `train_cluster_model` (ml)
 - which feeds `generate_personas` (ai)
 
-The pipeline follows a functional data flow pattern:
+What each stage does:
 
-- **Ingestion (Resilient Fetch):**
-  - _Source:_ NY Open Data (Socrata API).
-  - _Logic:_ Implements dynamic date-window detection to query the `max(transit_timestamp)` and fetch a rolling 30-day window. This handles upstream reporting lags gracefully.
-- **Enrichment (Geospatial Vectorization):**
-  - _Source:_ OpenStreetMap (Overpass API via OSMnx).
-  - _Logic:_ Generates 300m isochrones around every station centroid to calculate feature vectors: `nightlife` (amenity=bar), `corporate` (office=\*), and `academic` (amenity=university).
-- **Transformation (Time-Series Engineering):**
-  - _Signal Processing:_ Ridership is pivoted from scalar rows to **168-dimensional vectors** (Hour-of-Week).
-  - _Scaling:_ `TimeSeriesScalerMeanVariance` (Z-Score) is applied to normalize volume, ensuring clustering is based on _temporal shape_ (commuter patterns) rather than magnitude.
+- **Ingestion.** Pulls ridership from NY Open Data (Socrata API). It first looks up the latest `transit_timestamp` and fetches the 30 days before it, so a lag in upstream reporting doesn't produce an empty window.
+- **Enrichment.** Uses OSMnx (Overpass API) to count points of interest within 300m of each station: nightlife (`amenity` = bar, pub, nightclub), offices (any `office=*` tag) and academic (`amenity` = university, college).
+- **Transformation.** Pivots each station's ridership into a 168-value vector, one per hour of the week. `TimeSeriesScalerMeanVariance` (z-score) then normalizes each vector, so stations cluster by the shape of their week (for example, a commuter pattern) rather than by total volume.
 
-### 2. Logic Engines (Backend)
+Outputs land in `dagster_pipeline/data/processed/`. The backend reads from `backend/data/`, so they have to be copied there (see Setup).
 
-The FastAPI backend (`backend/app/main.py`) runs deterministic classification
-and narrative generation before any LLM call, so the facts a station's
-description depends on (borough, archetype, peak time) never depend on
-model output.
+### Backend
 
-- **GeoEngine (Linear Boundary Classification):**
-  - Instead of a bounding box per borough, a piecewise slope-intercept model
-    approximates the diagonal path of the East River, so Manhattan resolves
-    correctly against Brooklyn/Queens near diagonal-boundary neighborhoods
-    like DUMBO and Long Island City, where a bounding box misclassifies.
-  - Covered by 10 unit tests in `backend/tests/test_geo_engine.py`, one per
-    boundary zone.
-- **NarrativeEngine (Hybrid Deterministic/Generative):**
-  - _Layer 1 (Deterministic):_ A rule-based engine generates a "Base
-    Narrative" from strict thresholds (e.g. `Social Pulse > 80` + `Night
-    Traffic > 40` → "Nightlife District"). Borough and archetype in the
-    response always come from this layer, never from the LLM.
-  - _Layer 2 (Generative):_ Gemini is used only for stylistic polish, given
-    Layer 1's output as a constraint, and is skipped entirely when no API
-    key is configured — the endpoint still returns the deterministic
-    narrative.
-  - Covered by 9 unit tests in `backend/tests/test_narrative_engine.py`,
-    one per archetype branch plus a priority-ordering check (high vitality
-    alone doesn't trigger "Nightlife" without matching night-traffic too).
+`backend/app/main.py` works out a station's borough and archetype with plain rules before any LLM call. The facts in a description (borough, archetype, peak time) never come from model output.
 
-### 3. Serving Layer (OLAP)
+- **GeoEngine** assigns boroughs. A single bounding box per borough gets the wrong answer near the diagonal East River, around DUMBO and Long Island City. Instead, a piecewise slope-intercept line approximates the river so Manhattan is separated correctly from Brooklyn and Queens. `backend/tests/test_geo_engine.py` has 10 unit tests, one per boundary zone.
+- **RuleBasedNarrative** writes the description in two layers:
+  - Layer 1 applies fixed thresholds to produce a base description (for example, Social Pulse above 75 and night traffic above 40 gives "Nightlife District"). Borough and archetype in the response always come from this layer.
+  - Layer 2 sends Layer 1's output to Gemini for wording only. With no API key configured, this step is skipped and the endpoint returns the Layer 1 text.
+  - `backend/tests/test_narrative_engine.py` has 9 unit tests: one per archetype branch, plus a check that high Social Pulse alone doesn't produce "Nightlife" without matching night traffic.
 
-- **Storage:** Columnar Parquet files (`backend/data/*.parquet`) serve as the System of Record.
-- **Query Engine:** **DuckDB** runs in-process within the API, executing SQL directly over Parquet with zero-copy reads.
-- **Context-Aware UI:** The frontend adapts its visualization strategy based on the analytical mode (General, Lifestyle, or Retail Scout).
+### Serving
 
-## Metric Definitions
+- **Storage:** Parquet files in `backend/data/*.parquet` are the source of truth.
+- **Queries:** DuckDB runs inside the API process and runs SQL straight against the Parquet files, without importing them first.
+- **Frontend:** the map changes what it shows depending on the selected mode: General, Lifestyle or Retail Scout.
+
+## Performance
+
+A fresh 30-day pull from the MTA API on 2026-09-09 gave 344 stations, 5 clusters and 106,810 ridership rows. These numbers change with the rolling window, so treat them as representative.
+
+The benchmark times the per-station, per-hour aggregation (`GROUP BY` station and hour) that `preload_data()` in `backend/app/main.py` runs over the full ridership table on every cold start to build the pulse cache. It ran 100 iterations after a warmup:
+
+| Measurement | p50 | p95 |
+|---|---|---|
+| DuckDB execution only | 5.82ms | 6.83ms |
+| Full `db.query()` path | 21.96ms | 24.44ms |
+
+The full path adds a fresh in-memory connection, pandas NaN/inf cleanup and conversion to dicts. That second number is the one that limits latency seen by a client.
+
+To reproduce, run `python scripts/benchmark.py`. It needs `backend/data/traffic_clean.parquet`, a pipeline output that isn't checked into git; the script's docstring explains how to create it. A second check, `backend/tests/test_performance.py`, uses synthetic data, so it runs in CI without the real dataset.
+
+## Metric definitions
 
 ### Social Pulse ($S_p$)
 
-_Previously "Vitality Score"._
-A percentile rank quantifying the **"Off-Work" energy** of a neighborhood. It combines the density of social amenities (bars, restaurants, culture) with late-night ridership patterns.
-$$ S*p = \text{Percentile}(Density*{amenities} \times Ridership\_{night}) $$
+_Previously "Vitality Score"._ A percentile rank for a neighborhood's after-work activity. The design formula combines social amenity density (bars, restaurants, culture) with late-night ridership:
 
-- **> 80:** High Energy / Nightlife Hub.
-- **< 20:** Quiet / Residential Zone.
+$$ S_p = \text{Percentile}(Density_{amenities} \times Ridership_{night}) $$
+
+- **> 80:** high energy, nightlife hub.
+- **< 20:** quiet, residential.
+
+In the current code, the value is the station's percentile rank on bar count alone (`calculate_percentile("bars", ...)`).
 
 ### Retail Gap ($R_g$)
 
-Quantifies the imbalance between workforce density and local services.
+Measures how far office density outpaces local services. Design formula:
+
 $$ R_g = \text{Norm}(O_s) - \text{Norm}(S_p) $$
 
-- **High Gap (> 0.6):** High concentration of office workers but low Social Pulse (amenities). Indicates a prime investment opportunity for retail or lunch spots.
+- **High gap (> 0.6):** many office workers but few amenities (low Social Pulse). A likely opening for retail or lunch spots.
+
+The current code uses fixed tiers instead: 0.9 when the office percentile is above 60 and Social Pulse is below 40, 0.6 when office is above 40 and Social Pulse below 50, and 0.1 when Social Pulse is above 80.
 
 ### Time DNA
 
-A vectorized representation of the station's "Pulse".
+A short summary of a station's daily ridership shape (`time_dna` in the API):
 
-- **Morning Peak (6-10 AM):** Commuter Outflow (Residential) or Inflow (Commercial).
-- **Night Peak (10 PM - 4 AM):** Indicator of specific nightlife destinations vs. 24h hubs.
+- **Morning peak (6 to 10 AM):** commuters leaving (residential) or arriving (commercial).
+- **Night peak (10 PM to 4 AM):** separates nightlife destinations from 24-hour hubs.
 
-## Setup & Deployment
+## Setup
 
 ### Prerequisites
 
-- Python 3.10+
-- Node.js 18+
-- Google Gemini API Key (Optional, for narrative polish)
+- Python 3.10+ (CI and the Docker image use 3.11)
+- Node.js 20.19+ (required by Vite 7; CI uses Node 22)
+- Google Gemini API key (optional, only for the Layer 2 wording step)
 
-### Local Development
+### Local development
 
-1.  **Install dependencies:**
+1. **Install dependencies:**
 
     ```bash
     python -m venv venv && source venv/bin/activate
@@ -138,21 +109,31 @@ A vectorized representation of the station's "Pulse".
     cd frontend && npm install && cd ..
     ```
 
-2.  **Hydrate Data Lake:**
+2. **Build the data:**
 
     ```bash
-    # Runs the ETL pipeline to generate Parquet files
-    # Note: Requires ~2GB RAM for OSMnx graph processing
+    # Runs the pipeline and writes Parquet files to dagster_pipeline/data/processed/
+    # Note: OSMnx needs about 2GB of RAM
     dagster asset materialize --select \* -m dagster_pipeline
     ```
 
-3.  **Start Platform:**
+3. **Start the app:**
+
     ```bash
     ./dev.sh
     ```
+
     - Backend: `http://localhost:8000`
     - Frontend: `http://localhost:5173`
-    - Dagster UI: `http://localhost:3000`
+
+    `dev.sh` copies the pipeline output into `backend/data/` only when `backend/data/clusters.parquet` is missing. After re-running the pipeline, copy the files yourself:
+
+    ```bash
+    mkdir -p backend/data
+    cp dagster_pipeline/data/processed/* backend/data/
+    ```
+
+    `dev.sh` does not start the Dagster UI. To browse the asset graph, run `dagster dev -m dagster_pipeline` in another terminal (it serves on `http://localhost:3000` by default).
 
 ### Docker
 
@@ -160,13 +141,7 @@ A vectorized representation of the station's "Pulse".
 docker compose up --build
 ```
 
-Builds and runs the backend (`:8000`) and frontend (`:5173`) as separate
-containers. The backend mounts `backend/data` at runtime rather than baking
-pipeline output into the image, so it always serves whatever `dagster asset
-materialize` most recently produced. Run the pipeline hydration step above
-first — an empty `backend/data` means the API responds with empty lists
-instead of station data (see the "no data" branches in
-`backend/app/main.py`'s loaders).
+This runs the backend (`:8000`) and frontend (`:5173`) as separate containers. The backend mounts `backend/data` at runtime instead of baking pipeline output into the image, so it serves whatever is in that folder when it starts. Build the data and copy it into `backend/data/` first (steps 2 and 3 above). If `backend/data` is empty, the API returns empty lists instead of station data (see the `return []` branches in the loaders in `backend/app/main.py`).
 
 ### Tests
 
@@ -176,10 +151,6 @@ pip install -r requirements-dev.txt
 python -m pytest tests/ -v
 ```
 
-21 tests: 19 against the real `GeoEngine` and `RuleBasedNarrative` classes
-in `app/main.py` — no mocking, and no data files required (both classes are
-pure functions over their arguments) — plus 2 performance regression tests
-in `test_performance.py` that build their own synthetic Parquet fixture and
-assert the `GROUP BY station` query stays under a generous latency ceiling.
-CI runs this suite on every push (see the badge above). See
-[CONTRIBUTING.md](CONTRIBUTING.md) for setup details.
+There are 21 backend tests. Nineteen exercise the real `GeoEngine` and `RuleBasedNarrative` classes in `app/main.py`. They use no mocks and need no data files, because both classes are pure functions of their arguments. The other 2, in `test_performance.py`, build their own synthetic Parquet file and check that the `GROUP BY` station query stays under a generous time limit.
+
+CI runs these tests on every push to `main` and on pull requests, along with `ruff` and the frontend's lint, test (`npm run test`) and build steps. See [CONTRIBUTING.md](CONTRIBUTING.md) for more setup detail.
